@@ -118,7 +118,11 @@ class CameraFragment: Fragment(), ConnectChecker {
 
     bStartStop.setOnClickListener {
       if (!genericStream.isStreaming) {
-        genericStream.startStream(etUrl.text.toString())
+        var url = etUrl.text.toString()
+        if (etUrl.text.toString().isEmpty()) {
+          url = "rtsp://10.10.120.20/live/1"
+        }
+        genericStream.startStream(url)
         bStartStop.setImageResource(R.drawable.stream_stop_icon)
       } else {
         genericStream.stopStream()

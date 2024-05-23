@@ -72,6 +72,7 @@ class RotationActivity : AppCompatActivity(), OnTouchListener {
       when (item.itemId) {
         R.id.video_source_camera1 -> {
           currentVideoSource = updateMenuColor(currentVideoSource, item)
+          // 切换视频源，基于VideoSource实现
           cameraFragment.genericStream.changeVideoSource(Camera1Source(applicationContext))
         }
         R.id.video_source_camera2 -> {

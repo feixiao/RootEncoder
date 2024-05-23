@@ -32,7 +32,7 @@ import com.pedro.encoder.input.video.facedetector.FaceDetectorCallback
  * Created by pedro on 11/1/24.
  */
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class Camera2Source(context: Context): VideoSource() {
+class   Camera2Source(context: Context): VideoSource() {
 
   private val camera = Camera2ApiManager(context)
   private var facing = CameraHelper.Facing.BACK
