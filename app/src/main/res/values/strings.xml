@@ -7,7 +7,7 @@
   <string name="display">Screen</string>
   <string name="rotation_rtmp">Rotation\n(include filters)</string>
   <string name="tv_select">Select your streamer</string>
-  <string name="hint_protocol">protocol://yourendpoint</string>
+  <string name="hint_protocol">rtsp://10.10.120.20/live/1</string>
   <!--filters-->
   <string name="grey_scale">Grey scale</string>
   <string name="negative">Negative</string>

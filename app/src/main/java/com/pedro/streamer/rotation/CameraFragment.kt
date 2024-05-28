@@ -19,6 +19,7 @@ package com.pedro.streamer.rotation
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -31,6 +32,7 @@ import androidx.fragment.app.Fragment
 import com.pedro.common.ConnectChecker
 import com.pedro.library.base.recording.RecordController
 import com.pedro.library.generic.GenericStream
+import com.pedro.library.util.sources.audio.NoAudioSource
 import com.pedro.library.util.sources.video.Camera1Source
 import com.pedro.library.util.sources.video.Camera2Source
 import com.pedro.streamer.R
@@ -78,9 +80,13 @@ class CameraFragment: Fragment(), ConnectChecker {
   }
   private lateinit var surfaceView: SurfaceView
   private lateinit var bStartStop: ImageView
-  private val width = 640
-  private val height = 480
-  private val vBitrate = 1200 * 1000
+  // 1024x768
+  private val width = 1024
+  private val height = 768
+
+  //  private val width = 1920
+//  private val height = 1080
+  private val vBitrate = 2048 * 1000
   private var rotation = 0
   private val sampleRate = 32000
   private val isStereo = true
@@ -167,8 +173,10 @@ class CameraFragment: Fragment(), ConnectChecker {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    genericStream.changeAudioSource(NoAudioSource())
+    genericStream.changeVideoSource(AAOSCameraSource(requireContext()))
     prepare()
-    genericStream.getStreamClient().setReTries(10)
+   genericStream.getStreamClient().setReTries(10)
   }
 
   private fun prepare() {
@@ -176,6 +184,7 @@ class CameraFragment: Fragment(), ConnectChecker {
       genericStream.prepareVideo(width, height, vBitrate, rotation = rotation) &&
           genericStream.prepareAudio(sampleRate, isStereo, aBitrate)
     } catch (e: IllegalArgumentException) {
+      Log.e("CameraFragment", "Error preparing stream", e)
       false
     }
     if (!prepared) {

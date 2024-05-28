@@ -80,8 +80,9 @@ class RotationActivity : AppCompatActivity(), OnTouchListener {
           cameraFragment.genericStream.changeVideoSource(Camera2Source(applicationContext))
         }
         R.id.video_source_camerax -> {
-          currentVideoSource = updateMenuColor(currentVideoSource, item)
-          cameraFragment.genericStream.changeVideoSource(CameraXSource(applicationContext))
+         currentVideoSource = updateMenuColor(currentVideoSource, item)
+//          cameraFragment.genericStream.changeVideoSource(CameraXSource(applicationContext))
+          cameraFragment.genericStream.changeVideoSource(AAOSCameraSource(applicationContext))
         }
         R.id.video_source_bitmap -> {
           currentVideoSource = updateMenuColor(currentVideoSource, item)
