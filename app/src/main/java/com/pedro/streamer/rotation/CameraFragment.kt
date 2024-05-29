@@ -74,7 +74,7 @@ class CameraFragment: Fragment(), ConnectChecker {
   }
 
   val genericStream: GenericStream by lazy {
-    GenericStream(requireContext(), this).apply {
+    GenericStream(requireContext(), this, AAOSCameraSource(requireContext()), NoAudioSource()).apply {
       getGlInterface().autoHandleOrientation = true
     }
   }
@@ -126,7 +126,7 @@ class CameraFragment: Fragment(), ConnectChecker {
       if (!genericStream.isStreaming) {
         var url = etUrl.text.toString()
         if (etUrl.text.toString().isEmpty()) {
-          url = "rtsp://10.10.120.20/live/1"
+          url = "rtsp://10.10.120.20:8554/live/1"
         }
         genericStream.startStream(url)
         bStartStop.setImageResource(R.drawable.stream_stop_icon)
@@ -173,10 +173,11 @@ class CameraFragment: Fragment(), ConnectChecker {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    genericStream.changeAudioSource(NoAudioSource())
-    genericStream.changeVideoSource(AAOSCameraSource(requireContext()))
+
+    genericStream.getStreamClient().setOnlyVideo(true)
+    genericStream.getStreamClient().setLogs(true)
+    genericStream.getStreamClient().setReTries(0)
     prepare()
-   genericStream.getStreamClient().setReTries(10)
   }
 
   private fun prepare() {
