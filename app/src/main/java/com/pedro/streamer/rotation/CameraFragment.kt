@@ -84,8 +84,7 @@ class CameraFragment: Fragment(), ConnectChecker {
   }
   private lateinit var surfaceView: SurfaceView
   private lateinit var bStartStop: ImageView
-  // 1024x768
-  // 1080x1920
+
   private val width = 1920
   private val height = 1080
   private val vBitrate = 2048 * 1000
@@ -176,12 +175,17 @@ class CameraFragment: Fragment(), ConnectChecker {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+
+    val displayMetrics = resources.displayMetrics
+    val screenWidth = displayMetrics.widthPixels
+    val screenHeight = displayMetrics.heightPixels
+
+    Log.i("CameraFragment", "width: $screenWidth, height: $screenHeight")
     prepare()
   }
 
   private fun prepare() {
-
-    rotation = 90
     Log.i("CameraFragment", "Prepare stream, rotation: $rotation")
     val prepared = try {
       genericStream.prepareVideo(width, height, vBitrate, rotation = rotation) &&
@@ -194,6 +198,8 @@ class CameraFragment: Fragment(), ConnectChecker {
       toast("Audio or Video configuration failed")
       activity?.finish()
     }
+
+//    genericStream.getGlInterface().setEncoderSize(height, width)
   }
 
   override fun onDestroy() {

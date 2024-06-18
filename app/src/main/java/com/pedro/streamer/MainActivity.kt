@@ -23,18 +23,20 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.pedro.streamer.oldapi.OldApiActivity
 import com.pedro.streamer.file.FromFileActivity
+import com.pedro.streamer.oldapi.OldApiActivity
 import com.pedro.streamer.rotation.RotationActivity
 import com.pedro.streamer.screen.ScreenActivity
 import com.pedro.streamer.utils.ActivityLink
 import com.pedro.streamer.utils.ImageAdapter
 import com.pedro.streamer.utils.toast
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     createList()
     setListAdapter(activities)
     requestPermissions()
+
   }
 
   @Suppress("DEPRECATION")
