@@ -70,6 +70,8 @@ class   Camera2Source(context: Context): VideoSource() {
     val resolutions = if (facing == CameraHelper.Facing.BACK) {
       camera.cameraResolutionsBack
     } else camera.cameraResolutionsFront
+
+
     return if (camera.levelSupported == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY) {
       //this is a wrapper of camera1 api. Only listed resolutions are supported
       resolutions.contains(size)

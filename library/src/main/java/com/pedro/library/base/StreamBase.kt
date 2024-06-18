@@ -107,7 +107,9 @@ abstract class StreamBase(
     }
     val videoResult = videoSource.init(width, height, fps, rotation)
     if (videoResult) {
+
       if (rotation == 90 || rotation == 270) glInterface.setEncoderSize(height, width)
+
       else glInterface.setEncoderSize(width, height)
       val isPortrait = rotation == 90 || rotation == 270
       glInterface.setIsPortrait(isPortrait)

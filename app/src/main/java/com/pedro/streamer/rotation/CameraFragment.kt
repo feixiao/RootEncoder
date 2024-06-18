@@ -77,17 +77,19 @@ class CameraFragment: Fragment(), ConnectChecker {
     GenericStream(requireContext(), this, AAOSCameraSource(requireContext()), NoAudioSource()).apply {
       getGlInterface().autoHandleOrientation = true
     }
+
+//    GenericStream(requireContext(), this, Camera1Source(requireContext()), NoAudioSource()).apply {
+//      getGlInterface().autoHandleOrientation = true
+//    }
   }
   private lateinit var surfaceView: SurfaceView
   private lateinit var bStartStop: ImageView
   // 1024x768
-  private val width = 1024
-  private val height = 768
-
-  //  private val width = 1920
-//  private val height = 1080
+  // 1080x1920
+  private val width = 1920
+  private val height = 1080
   private val vBitrate = 2048 * 1000
-  private var rotation = 0
+  private var rotation = 90
   private val sampleRate = 32000
   private val isStereo = true
   private val aBitrate = 128 * 1000
@@ -114,6 +116,7 @@ class CameraFragment: Fragment(), ConnectChecker {
 
       override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         genericStream.getGlInterface().setPreviewResolution(width, height)
+
       }
 
       override fun surfaceDestroyed(holder: SurfaceHolder) {
@@ -126,7 +129,7 @@ class CameraFragment: Fragment(), ConnectChecker {
       if (!genericStream.isStreaming) {
         var url = etUrl.text.toString()
         if (etUrl.text.toString().isEmpty()) {
-          url = "rtsp://10.10.120.20:8554/live/1"
+          url = "rtsp://10.10.120.20:8554/live/10"
         }
         genericStream.startStream(url)
         bStartStop.setImageResource(R.drawable.stream_stop_icon)
@@ -173,14 +176,13 @@ class CameraFragment: Fragment(), ConnectChecker {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
-    genericStream.getStreamClient().setOnlyVideo(true)
-    genericStream.getStreamClient().setLogs(true)
-    genericStream.getStreamClient().setReTries(0)
     prepare()
   }
 
   private fun prepare() {
+
+    rotation = 90
+    Log.i("CameraFragment", "Prepare stream, rotation: $rotation")
     val prepared = try {
       genericStream.prepareVideo(width, height, vBitrate, rotation = rotation) &&
           genericStream.prepareAudio(sampleRate, isStereo, aBitrate)

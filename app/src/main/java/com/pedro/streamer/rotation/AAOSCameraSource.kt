@@ -3,6 +3,8 @@ package com.pedro.streamer.rotation
 
 import android.content.Context
 import android.graphics.SurfaceTexture
+import android.hardware.Camera
+import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.util.Log
@@ -11,6 +13,7 @@ import android.util.Size
 import android.view.MotionEvent
 import androidx.annotation.RequiresApi
 import com.pedro.encoder.input.video.Camera2ApiManager
+import com.pedro.encoder.input.video.CameraHelper
 import com.pedro.encoder.input.video.facedetector.FaceDetectorCallback
 import com.pedro.library.util.sources.video.VideoSource
 
@@ -64,23 +67,35 @@ class   AAOSCameraSource(context: Context): VideoSource() {
 
     override fun isRunning(): Boolean = camera.isRunning
 
+
+    private fun mapCamera1Resolutions(resolutions: List<Camera.Size>, shouldRotate: Boolean) = resolutions.map {
+        if (shouldRotate) Size(it.height, it.width) else Size(it.width, it.height)
+    }
     private fun checkResolutionSupported(width: Int, height: Int): Boolean {
         if (width % 2 != 0 || height % 2 != 0) {
             throw IllegalArgumentException("width and height values must be divisible by 2")
         }
 
+
         val ids = cameraHelper.getCameraIdList()
-        val size = Size(width, height)
         val id = ids?.get(0)
         mId = id?:""
 
-        Log.i("AAOSCameraSource", "Camera id: $id")
-        val resolutions =  camera.getCameraResolutions(id)
-        for (resolution in resolutions) {
-            Log.i("AAOSCameraSource", "Resolution: ${resolution.width}x${resolution.height}")
-        }
+        val size = Size(width, height)
+        val resolutions = camera.getCameraResolutions(mId)
 
-        return  resolutions.contains(size)
+        return if (camera.levelSupported == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY) {
+              //this is a wrapper of camera1 api. Only listed resolutions are supported
+            resolutions?.contains(size) ?: false
+        } else {
+            val widthList = resolutions.map { size.width }
+            val heightList = resolutions.map { size.height }
+            val maxWidth = widthList.maxOrNull() ?: 0
+            val maxHeight = heightList.maxOrNull() ?: 0
+            val minWidth = widthList.minOrNull() ?: 0
+            val minHeight = heightList.minOrNull() ?: 0
+            size.width in minWidth..maxWidth && size.height in minHeight..maxHeight
+        }
     }
 
     fun switchCamera() {
